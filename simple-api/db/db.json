@@ -1,0 +1,10 @@
+{   "products":[
+        {"id":1,"name":"Apel","price":100},
+        {"id":2,"name":"Jeruk","price":200},
+        {"id":3,"name":"Anggur","price":300}
+    ],
+
+    "users": [
+        {"id": 1, "username": "ryandefryan", "password": "abc123"}
+    ]
+}
