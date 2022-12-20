@@ -1,6 +1,5 @@
-const studentsController = require('./studentsController');
-const titanicController = require('./titanicController')
+const productController = require('./productController');
 
 module.exports = {
-    studentsController, titanicController
+    productController
 }

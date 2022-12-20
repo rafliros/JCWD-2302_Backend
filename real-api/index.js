@@ -9,8 +9,7 @@ app.get('/', (req, res) => {
 })
 
 // Import Router
-const {studentsRouter, titanicRouter} = require('./routers')
-app.use('/students', studentsRouter)
-app.use('/titanic', titanicRouter)
+const {productRouter} = require('./routers')
+app.use('/product', productRouter)
 
 app.listen(PORT, () =>  console.log(`API Running on Port ${PORT}`))

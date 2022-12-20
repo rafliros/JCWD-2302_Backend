@@ -1,6 +1,5 @@
-const studentsRouter = require('./studentsRouter');
-const titanicRouter = require('./titanicRouter');
+const productRouter = require('./productRouter');
 
 module.exports = {
-    studentsRouter, titanicRouter
+    productRouter
 }
