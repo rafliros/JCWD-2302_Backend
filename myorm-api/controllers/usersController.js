@@ -54,5 +54,31 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    },
+
+    login: async(req, res) => {
+        // Step-1 Ambil value dari req.body
+        let {username, password} = req.body
+
+        // Step-2 Cari username dan password di database
+        let findUsernameAndPassword = await users.findOne({
+            where: {
+                [Op.and]: [
+                    { username: username },
+                    { password: password }
+                ]
+            }
+        })
+        if(!findUsernameAndPassword) return res.status(404).send({
+            isError: true,
+            message: 'Username and Password Not Found',
+            data: null
+        })
+        // Step-3 Kirim response
+        res.status(201).send({
+            isError: false, 
+            message: 'Login Success',
+            data: {id: findUsernameAndPassword.dataValues.id, username: findUsernameAndPassword.dataValues.username}
+        })
     }
 }   

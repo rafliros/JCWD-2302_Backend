@@ -5,5 +5,6 @@ const Router = express.Router()
 const {usersController} = require('../controllers') // Akan otomatis mengambil file index.js nya
 
 Router.post('/register', usersController.register)
+Router.post('/login', usersController.login)
 
 module.exports = Router
