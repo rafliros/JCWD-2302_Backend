@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     users.hasMany(models.users_address, {
       foreignKey: 'users_id'
     })
+
+    users.belongsToMany(models.products, {
+      through: 'carts'
+    })
   }
 
   return users

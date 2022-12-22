@@ -9,8 +9,16 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'products_id'
     })
 
+    products.hasOne(models.products_image, {
+      foreignKey: 'products_id'
+    })
+
     products.belongsTo(models.category, {
       foreignKey: 'category_id'
+    })
+
+    products.belongsToMany(models.users, {
+      through: 'carts'
     })
   }
 
