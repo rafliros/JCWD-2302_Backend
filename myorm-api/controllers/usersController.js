@@ -10,6 +10,9 @@ const db = require('./../models/index')
 const users = db.users
 const users_address = db.users_address
 
+// Import hashing
+const {hashPassword} = require('./../lib/hashPassword')
+
 module.exports = {
     register: async(req, res) => {
         // To rollback transactions
@@ -40,7 +43,7 @@ module.exports = {
                 data: null
             })
             // Step-4 Simpan data ke dalam database
-            let resCreateUsers = await users.create({id: uuidv4(), username, email, password}, {transaction: t})
+            let resCreateUsers = await users.create({id: uuidv4(), username, email, password: await hashPassword(password)}, {transaction: t})
             console.log(resCreateUsers.dataValues.id)
 
             await users_address.create({receiver: 'Ryan', address: 'Kab. Bogor', phone_number: 62, users_id: resCreateUsers.dataValues.id}, {transaction: t})
