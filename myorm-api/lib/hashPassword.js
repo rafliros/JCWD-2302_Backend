@@ -10,6 +10,16 @@ const hashPassword = async (password) => {
     }
 };
 
+// hashMatch function : Function untuk melakukan pengecekan dari password yang diinput dengan password yang ada di database
+const hashMatch = async (passwordFromLogin, hashedPasswordFromDatabase) => {
+  try {
+    let match = await bcrypt.compare(passwordFromLogin, hashedPasswordFromDatabase);
+    return match;
+  } catch (error) {
+    return false;
+  }
+};
+
 module.exports = {
-    hashPassword
+    hashPassword, hashMatch
 }

@@ -11,7 +11,10 @@ const users = db.users
 const users_address = db.users_address
 
 // Import hashing
-const {hashPassword} = require('./../lib/hashPassword')
+const {hashPassword, hashMatch} = require('./../lib/hashPassword')
+
+// Import jwt
+const {createToken} = require('./../lib/jwt')
 
 module.exports = {
     register: async(req, res) => {
@@ -66,22 +69,46 @@ module.exports = {
         // Step-2 Cari username dan password di database
         let findUsernameAndPassword = await users.findOne({
             where: {
-                [Op.and]: [
-                    { username: username },
-                    { password: password }
-                ]
+                username
             }
         })
+
         if(!findUsernameAndPassword) return res.status(404).send({
             isError: true,
-            message: 'Username and Password Not Found',
+            message: 'Username Not Found',
             data: null
         })
+
+        let matchPassword = await hashMatch(password, findUsernameAndPassword.password)
+        
+        if(matchPassword === false) return res.status(404).send({
+            isError: true,
+            message: 'Password Not Found',
+            data: null
+        })
+
+        const token = createToken({id: findUsernameAndPassword.id, username: findUsernameAndPassword.username})
+        
         // Step-3 Kirim response
         res.status(201).send({
             isError: false, 
             message: 'Login Success',
-            data: {id: findUsernameAndPassword.dataValues.id, username: findUsernameAndPassword.dataValues.username}
+            data: {token, username: findUsernameAndPassword.dataValues.username}
         })
+    },
+
+    keepLogin: (req, res) => {
+        try {
+            console.log(req.dataToken)
+
+            // Get data user by id 
+            res.status(201).send({
+                isError: false, 
+                message: 'Token Valid',
+                data: req.dataToken.username
+            })
+        } catch (error) {
+            
+        }
     }
 }   
