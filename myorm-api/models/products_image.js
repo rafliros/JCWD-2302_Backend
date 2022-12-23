@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
 
   products_image.associate = function(models){
     // Assocations define here
-    users.belongsTo(models.products, {
+    products_image.belongsTo(models.products, {
       foreignKey: 'products_id'
     })
   }
