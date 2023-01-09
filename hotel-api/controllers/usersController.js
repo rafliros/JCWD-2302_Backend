@@ -61,6 +61,12 @@ module.exports = {
                 }
             })
 
+            if(!findUsers) return res.status(404).send({
+                isError: true, 
+                message: 'Username or Email Not Found', 
+                data: null
+            })
+
             let hasMatchResult = await hashMatch(password, findUsers.password)
 
             if(hasMatchResult === false) return res.status(404).send({

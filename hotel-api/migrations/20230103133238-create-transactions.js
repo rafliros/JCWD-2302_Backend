@@ -36,12 +36,6 @@ module.exports = {
       status: {
         type: Sequelize.STRING
       },
-      users_id: {
-        type: Sequelize.INTEGER
-      },
-      hotels_rooms_id: {
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
