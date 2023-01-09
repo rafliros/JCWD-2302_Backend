@@ -5,5 +5,6 @@ const Router = express.Router()
 const {usersController} = require('./../Controllers');
 
 Router.post('/register', usersController.register);
+Router.get('/login', usersController.login);
 
 module.exports = Router;
