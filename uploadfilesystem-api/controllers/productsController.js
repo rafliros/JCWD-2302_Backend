@@ -54,22 +54,27 @@ module.exports = {
             let findAllImagePath = await products_images.findAll({
                 where: {
                     products_id 
-                }
-            }, {transaction: t})
+                }, 
+                transaction: t
+            })
+
+            if(!findAllImagePath) throw {message: 'Image Id Not Found'}
 
             // Step-3 Delete data di tabel products_images where products_id = id params
             await products_images.destroy({
                 where: {
                     products_id 
-                }
-            }, {transaction: t})
+                }, 
+                transaction: t
+            })
 
             // Step-4 Delete data di tabel products where id = id params
             await products.destroy({
                 where: {
                     id: products_id
-                }
-            }, {transaction: t})
+                },
+                transaction: t
+            })
 
             // Step-5 Delete Files
             deleteFiles({images: findAllImagePath})
@@ -83,7 +88,63 @@ module.exports = {
             })
         } catch (error) {
             await t.rollback()
-            console.log(error)
+            deleteFiles(req.files)
+            res.status(201).send({
+                isError: false, 
+                message: error.message,
+                data: null
+            })
+        }
+    },
+
+    updatePerImage: async(req, res) => {
+        const t = await sequelize.transaction()
+        try {
+            // Step-1 Ambil id products_images dari params
+            let products_images_id = parseInt(req.params.products_images_id)
+
+            // Step-2 Ambil path image yg lama untuk kebutuhan delete image file yg lama
+            let findOldPathImage = await products_images.findOne({
+                where: {
+                    id: products_images_id
+                },
+                transaction: t
+            })
+
+            if(!findOldPathImage) throw {message: 'Image Id Not Found'}
+
+            let pathToDelete = []
+            pathToDelete.push(findOldPathImage)
+            // Step-3 Update image path yang lama dengan image path terbarunya
+            await products_images.update(
+                {
+                    path: req.files.images[0].path
+                }, 
+                {
+                    where: {
+                        id: products_images_id
+                    }
+                },
+                {transaction: t})
+
+            // Step-4 Delete image file yang lama
+            deleteFiles({images: pathToDelete})
+
+            await t.commit()
+            // Step-5 Kirim Response
+            res.status(201).send({
+                isError: false, 
+                message: 'Update Products Success!',
+                data: null
+            })
+        } catch (error) {
+            await t.rollback()
+            deleteFiles(req.files)
+            res.status(201).send({
+                isError: true, 
+                message: error.message ,
+                data: null
+            })
         }
     }
 }
