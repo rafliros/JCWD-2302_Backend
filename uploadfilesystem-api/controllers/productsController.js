@@ -146,5 +146,26 @@ module.exports = {
                 data: null
             })
         }
+    },
+
+    getProducts: async(req, res) => {
+        try {
+            let findAllProducts = await products.findAll({
+                include: [
+                    {
+                        model: products_images,
+                        attribute: 'path'
+                    }
+                ]
+            })
+            
+            res.status(201).send({
+                isError: false, 
+                message: 'Get Data Products Success!',
+                data: findAllProducts
+            })
+        } catch (error) {
+            
+        }
     }
 }
