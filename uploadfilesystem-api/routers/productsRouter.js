@@ -8,5 +8,6 @@ const {productsController} = require('../Controllers');
 const upload = require('./../middleware/upload')
 
 Router.post('/create', upload, productsController.create);
+Router.delete('/delete/:products_id', productsController.delete);
 
 module.exports = Router;

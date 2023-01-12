@@ -26,7 +26,7 @@ module.exports = {
                 pathToCreate.push({path: value.path, products_id: products_id})
             })
             
-            let createProductsImages = await products_images.bulkCreates(pathToCreate, {transaction: t, ignoreDuplicates: true})
+            let createProductsImages = await products_images.bulkCreate(pathToCreate, {transaction: t, ignoreDuplicates: true})
 
             await t.commit()
             res.status(201).send({
@@ -42,6 +42,48 @@ module.exports = {
                 message: error.message,
                 data: null
             })
+        }
+    },
+
+    delete: async(req, res) => {
+        const t = await sequelize.transaction() 
+        try {
+            // Step-1 Ambil id products dari query params
+            let products_id = parseInt(req.params.products_id)
+            // Step-2 Ambil path images to delete, untuk kebutuhan delete file nya
+            let findAllImagePath = await products_images.findAll({
+                where: {
+                    products_id 
+                }
+            }, {transaction: t})
+
+            // Step-3 Delete data di tabel products_images where products_id = id params
+            await products_images.destroy({
+                where: {
+                    products_id 
+                }
+            }, {transaction: t})
+
+            // Step-4 Delete data di tabel products where id = id params
+            await products.destroy({
+                where: {
+                    id: products_id
+                }
+            }, {transaction: t})
+
+            // Step-5 Delete Files
+            deleteFiles({images: findAllImagePath})
+
+            // Step-5 Response
+            await t.commit()
+            res.status(201).send({
+                isError: false, 
+                message: 'Delete Products Success!',
+                data: null
+            })
+        } catch (error) {
+            await t.rollback()
+            console.log(error)
         }
     }
 }

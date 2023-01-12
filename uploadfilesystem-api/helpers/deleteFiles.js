@@ -1,7 +1,6 @@
 const fs = require('fs')
 
 const deleteFiles = (files) => {
-    console.log(files.images)
     files.images.forEach((value) => {
         fs.unlink(value.path, function(err){
             try {
