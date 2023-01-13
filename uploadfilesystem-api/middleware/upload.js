@@ -9,6 +9,7 @@ const uploadImages = (req, res, next) => {
     multerResult(req, res, function (err){
         try { 
             if(err) throw err
+            console.log(req.files.images)
             req.files.images.forEach((value) => {
                 if(value.size > 100000) throw { message: `${value.originalname} size too large`, fileToDelete: req.files }
             })

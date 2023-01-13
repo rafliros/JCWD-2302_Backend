@@ -13,11 +13,10 @@ module.exports = {
     create: async(req, res) => {
         const t = await sequelize.transaction() 
         try {
-            console.log(req.files)
             // Step-1 Ngambil data dari client
             let dataToCreate = JSON.parse(req.body.data)
             // Step-2 Insert data to Products
-            let postProducts = await products.create(dataToCreate, {transaction: t})
+            let postProducts = await products.create({...dataToCreate, main_image: req.files.images[0].path}, {transaction: t})
             let products_id = postProducts.dataValues.id 
 
             // Step-3 Insert data to Products_Images

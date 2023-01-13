@@ -12,14 +12,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.products_images, {
-        foreignKey: 'products_id'
+        foreignKey: 'products_id',
+        onDelete: 'cascade'
       })
     }
   }
   products.init({
     name: DataTypes.STRING,
     price: DataTypes.INTEGER,
-    stocks: DataTypes.INTEGER
+    stocks: DataTypes.INTEGER,
+    main_image: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'products',
