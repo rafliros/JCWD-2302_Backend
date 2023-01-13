@@ -99,6 +99,7 @@ module.exports = {
     updatePerImage: async(req, res) => {
         const t = await sequelize.transaction()
         try {
+            console.log(req.files)
             // Step-1 Ambil id products_images dari params
             let products_images_id = parseInt(req.params.products_images_id)
 
@@ -107,26 +108,60 @@ module.exports = {
                 where: {
                     id: products_images_id
                 },
+                include: [{
+                    model: products, 
+                    attribute: 'main_image'
+                }],
                 transaction: t
             })
+            console.log(findOldPathImage.dataValues.path)
+            console.log(findOldPathImage.dataValues.product.dataValues.main_image)
 
+            let products_id = findOldPathImage.dataValues.products_id  
+            
             if(!findOldPathImage) throw {message: 'Image Id Not Found'}
-
+            
             let pathToDelete = []
-            pathToDelete.push(findOldPathImage)
-            // Step-3 Update image path yang lama dengan image path terbarunya
-            await products_images.update(
-                {
-                    path: req.files.images[0].path
-                }, 
-                {
-                    where: {
-                        id: products_images_id
-                    }
-                },
-                {transaction: t})
+                pathToDelete.push(findOldPathImage)
 
-            // Step-4 Delete image file yang lama
+            if(findOldPathImage.dataValues.path === findOldPathImage.dataValues.product.dataValues.main_image){
+                await products_images.update(
+                    {
+                        path: req.files.images[0].path
+                    }, 
+                    {
+                        where: {
+                            id: products_images_id
+                        }
+                    },
+                    {transaction: t})
+
+                    await products.update(
+                        {
+                            main_image: req.files.images[0].path
+                        }, 
+                        {
+                            where: {
+                                id: products_id
+                            }
+                        },
+                        {transaction: t})
+            }else{
+                // Step-3 Update image path yang lama dengan image path terbarunya
+                await products_images.update(
+                    {
+                        path: req.files.images[0].path
+                    }, 
+                    {
+                        where: {
+                            id: products_images_id
+                        }
+                    },
+                    {transaction: t})
+            }
+            
+
+            // // Step-4 Delete image file yang lama
             deleteFiles({images: pathToDelete})
 
             await t.commit()
@@ -137,6 +172,7 @@ module.exports = {
                 data: null
             })
         } catch (error) {
+            console.log(error)
             await t.rollback()
             deleteFiles(req.files)
             res.status(201).send({
@@ -153,9 +189,12 @@ module.exports = {
                 include: [
                     {
                         model: products_images,
-                        attribute: 'path'
+                        attribute: 'path', 
                     }
-                ]
+                ],
+                order: [
+                    [ products_images, 'id', 'ASC' ], 
+                  ]
             })
             
             res.status(201).send({

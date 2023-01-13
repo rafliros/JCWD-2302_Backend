@@ -11,7 +11,7 @@ const uploadImages = (req, res, next) => {
             if(err) throw err
             console.log(req.files.images)
             req.files.images.forEach((value) => {
-                if(value.size > 100000) throw { message: `${value.originalname} size too large`, fileToDelete: req.files }
+                if(value.size > 1000000) throw { message: `${value.originalname} size too large`, fileToDelete: req.files }
             })
             console.log('Nexttt')
             next()
