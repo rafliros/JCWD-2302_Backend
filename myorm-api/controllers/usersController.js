@@ -23,6 +23,10 @@ const fs = require('fs').promises
 
 const handlebars = require('handlebars');
 
+const client = require('./../connection/rconn');
+
+const axios = require('axios')
+
 module.exports = {
     register: async(req, res) => {
         // To rollback transactions
@@ -153,6 +157,35 @@ module.exports = {
                 isError: false, 
                 message: 'Account Actived!',
                 data: null 
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    getWithRedis: async(req, res) => {
+        try {
+            let {breed} = req.params
+            
+            let dataFromRedis = await client.get('dogs');
+            dataFromRedis = JSON.parse(dataFromRedis)
+            
+            if(dataFromRedis.message.length){
+                return res.status(201).send({
+                    isError: false, 
+                    message: 'Get Data From API Success!',
+                    data: dataFromRedis.message
+                })
+            }
+
+            let {data} = await axios.get(`https://dog.ceo/api/breed/${breed}/images`)
+        
+            client.setex('dogs', 10000, JSON.stringify(data))
+
+            res.status(201).send({
+                isError: false, 
+                message: 'Get Data From API Success!',
+                data: data
             })
         } catch (error) {
             console.log(error)
