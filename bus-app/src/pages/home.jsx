@@ -14,7 +14,11 @@ export default function Login(){
                     <label>Tanggal Berangkat</label>
                     <input type="password" class="form-control" />
                 </div>
-                <button type="submit" class="btn btn-danger w-100">Search Bus</button>
+                <div class="form-group">
+                    <label>Jumlah</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <button type="submit" onClick={onSubmit} class="btn btn-danger w-100">Search Bus</button>
             </div>
         </>
     )

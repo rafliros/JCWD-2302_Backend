@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "abc12345",
-    "database": "jcwdol08_bus",
+    "database": "jcwd2302_bus",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

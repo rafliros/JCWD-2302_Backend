@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'users_id'
       })
 
-      this.belongsTo(models.bus, {
-        foreignKey: 'bus_id'
+      this.belongsTo(models.bus_rute, {
+        foreignKey: 'bus_rute_id'
       })
 
       this.hasMany(models.transaction_details, {
@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     schedule_date: DataTypes.DATEONLY,
     total_price: DataTypes.INTEGER,
     expired_date: DataTypes.DATE,
+    total_seat: DataTypes.INTEGER,
     status: {
       type: DataTypes.STRING,
       defaultValue: 'Waiting for Payment'

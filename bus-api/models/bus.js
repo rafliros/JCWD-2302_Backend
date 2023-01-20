@@ -14,10 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.bus_rute, {
         foreignKey: 'bus_id'
       })
-
-      this.hasMany(models.transactions, {
-        foreignKey: 'bus_id'
-      })
     }
   }
   bus.init({

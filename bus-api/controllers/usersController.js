@@ -71,5 +71,15 @@ module.exports = {
         } catch (error) {
             
         }
+    }, 
+
+    keepLogin: async(req, res) => {
+        res.status(201).send({
+            isError: false, 
+            message: 'Keep Login',
+            data: {
+                token: req.headers.auth
+            }
+        })
     }
 }   

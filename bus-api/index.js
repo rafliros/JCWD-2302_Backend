@@ -8,18 +8,18 @@ app.use(cors())
 const PORT = 5004
 
 // ### Sequelize Synchronous
-// const Sequelize = require('sequelize');
-// const Models = require('./models');
-// Models.sequelize.sync({
-//     force : false,
-//     alter: true,
-//     logging : console.log
-// }).then(function () {
-//     console.log('Database is Synchronized!')
+const Sequelize = require('sequelize');
+const Models = require('./models');
+Models.sequelize.sync({
+    force : false,
+    alter: true,
+    logging : console.log
+}).then(function () {
+    console.log('Database is Synchronized!')
 
-// }).catch(function (err) {
-//     console.log(err, "Something Went Wrong with Database Update!")
-// });
+}).catch(function (err) {
+    console.log(err, "Something Went Wrong with Database Update!")
+});
 
 app.get('/', (req, res) => {
     res.status(201).send('<h1>Welcome to JCWD-2302 API</h1>')
