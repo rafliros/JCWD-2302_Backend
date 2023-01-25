@@ -8,5 +8,6 @@ const {usersController} = require('../controllers') // Akan otomatis mengambil f
 const jwtVerify  = require('./../middleware/decodeToken')
 
 Router.post('/register', usersController.register)
+Router.post('/login', usersController.login)
 
 module.exports = Router
