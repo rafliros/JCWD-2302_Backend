@@ -53,3 +53,4 @@ function SumPointInteger(arr){
 }
 
 SumPointInteger([1, 2, 3, 4, 5])
+
