@@ -3,6 +3,8 @@ import {useEffect, useState, useRef} from 'react';
 
 import './App.css'
 
+import {useLocation} from 'react-router-dom';
+
 // function App() {
 
 //   const[standings, setStandings] = useState([]) // [{}]
@@ -315,6 +317,9 @@ import {MdOutlineChair} from 'react-icons/md';
 
 export default function App(){
 
+    let scheduledate = useLocation().search.split('&')[0].split('=')[1]
+    let totalseat = useLocation().search.split('&')[3].split('=')[1]
+
     const [data, setData] = useState([])
     const [leftSeat, setLeftSeat] = useState([])
     const [rightSeat, setRightSeat] = useState([])
@@ -336,7 +341,7 @@ export default function App(){
                     }`)
                 }
             }
-            setLeftSeat(leftSeat)
+            setLeftSeat(leftSeat) // [1A 2B 3A 4B ...]
 
             let rightSeat = []
             for(let i=1; i<=response.data.data[0].category[1].travel.lists[0].total_right_seat; i++){
@@ -348,7 +353,7 @@ export default function App(){
                     }`)
                 }
             }
-            setRightSeat(rightSeat)
+            setRightSeat(rightSeat) // [1C 2D 3C 4D ...]
 
 
 
@@ -361,18 +366,16 @@ export default function App(){
     }
 
     let onSelectedSeat = (seat) => {
-        let newSelectSeat = [...selectedSeat] 
-        if(newSelectSeat.length >= 3 && !selectedSeat.includes(seat)){
-            alert('Maximum 3 Seat Only!')
-        }else if(selectedSeat.includes(seat)){
-            let idx = newSelectSeat.indexOf(seat)
-            newSelectSeat.splice(idx, 1)
-            setSelectedSeat(newSelectSeat)
+        let newSelectedSeat = [...selectedSeat]
+
+        if(!newSelectedSeat.includes(seat)){
+            newSelectedSeat.push(seat)
         }else{
-            newSelectSeat.push(seat)
-            console.log(newSelectSeat)
-            setSelectedSeat(newSelectSeat)
+            let idx = newSelectedSeat.indexOf(seat)
+            newSelectedSeat.splice(idx, 1)
         }
+
+        setSelectedSeat(newSelectedSeat)
     }
 
     useEffect(() => {
@@ -418,7 +421,7 @@ export default function App(){
                                         {
                                             leftSeat.map((value, index) => {
                                                 return(
-                                                    <div className='col-5' style={{display: 'inline-block', color: data.seat_booked.includes(value)? 'red':selectedSeat.includes(value)? 'green': 'black'}}>
+                                                    <div className='col-5' style={{display: 'inline-block', color: data.seat_booked.includes(value)? 'red':selectedSeat.includes(value)?'green':'black'}}>
                                                         <MdOutlineChair onClick={() => onSelectedSeat(value)} style={{fontSize: '23px'}} />
                                                         <span style={{fontSize: '15px', marginLeft: '3px', color: data.seat_booked.includes(value)? 'red':'black'}}>
                                                         {value}
@@ -433,7 +436,7 @@ export default function App(){
                                             rightSeat.map(value => {
                                                 return(
                                                     <div className='col-5' style={{display: 'inline-block'}}>
-                                                        <MdOutlineChair onClick={() => onSelectedSeat(value)} style={{fontSize: '23px', color: data.seat_booked.includes(value)? 'red':selectedSeat.includes(value)? 'green': 'black' }} />
+                                                        <MdOutlineChair onClick={() => onSelectedSeat(value)} style={{fontSize: '23px', color: data.seat_booked.includes(value)? 'red':selectedSeat.includes(value)?'green':'black' }} />
                                                         <span style={{fontSize: '15px', marginLeft: '3px', color: data.seat_booked.includes(value)? 'red':'black'}}>
                                                         {value}
                                                         </span>
@@ -461,7 +464,7 @@ export default function App(){
                                 </div>
                                 <div className="col-6">
                                     <h6 className="font-weight-light">
-                                        : 2023-01-25
+                                        : {scheduledate}
                                     </h6>
                                 </div>
                                 <div className="col-6 pl-4">
@@ -491,7 +494,7 @@ export default function App(){
                                 </div>
                                 <div className="col-6">
                                     <h6 className="font-weight-light">
-                                        : 36
+                                        : {totalseat}
                                     </h6>
                                 </div>
                                 <div className="col-6 pl-4">
